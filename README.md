@@ -14,22 +14,42 @@ Montei este roadmap para guiar meus próprios estudos e medir meu progresso. A m
 |---|---|
 | **15 fases** | Base → Computação → Python → SQL → Modelagem → Big Data/Spark → Pipelines → Streaming → Cloud → DataOps → Governança → Arquitetura → ML/IA → Staff+ → Carreira internacional |
 | **88 tópicos** | Cada um com *por que importa*, *o que estudar*, *mão na massa* e *fontes* (docs oficiais, livros, cursos) |
-| **~580 perguntas de validação** | Perguntas de nível de entrevista. Se você não consegue responder sem consultar, ainda não aprendeu |
+| **579 perguntas de validação** | Perguntas de nível de entrevista, **cada uma com resposta de referência oculta** para conferir depois de responder |
 | **15 projetos de portfólio** | Um projeto por fase, com entregáveis claros |
 | **~900 conceitos e ~240 práticas** | Checklists marcáveis |
 
 ## Funcionalidades
 
 - **Tracking de progresso** por conceito, prática, pergunta, tópico, fase e nível de senioridade
-- **Autoavaliação** de cada pergunta (*Não sei / Parcial / Domino*) e campo **"Minha resposta"** para responder por escrito
-- **Revisão ativa (quiz)** com repetição espaçada: prioriza pontos fracos e o que não é revisado há mais tempo (atalhos `1` `2` `3`)
+- **Responda → confira → avalie**: escreva sua resposta, revele a **resposta de referência** e se autoavalie (*Não sei / Parcial / Domino*)
+- **Revisão ativa (quiz)** com repetição espaçada: prioriza pontos fracos e o que não é revisado há mais tempo (atalhos `R` revela, `1` `2` `3` avaliam)
+- **Como estudar** em cada tópico: roteiro de estudo + buscas prontas (documentação, livros, aulas, cursos, artigos, GitHub, perguntas de entrevista)
+- **Sincronização celular ↔ computador** com login Google (Firebase, gratuito)
+- **Tradução para inglês** com um clique (PT/EN)
 - **Histórico de acesso**, heatmap de atividade e sequência de dias estudando
 - **Projeção de conclusão** com base nas horas semanais de estudo
 - **Busca** em tópicos, conceitos e perguntas (atalho `/`)
 - **Backup/restauração** do progresso em JSON (para sincronizar entre computador e celular)
 - Tema claro/escuro e layout responsivo
 
-O progresso fica salvo no `localStorage` do navegador. Nada é enviado para nenhum servidor.
+O progresso fica salvo no `localStorage` do navegador. Com o login Google ativo, também vai para um documento privado no Firestore (só o próprio usuário lê e escreve), e cada aparelho mescla as mudanças: em cada item vale a alteração mais recente.
+
+### Ativando a sincronização (uma vez)
+
+1. Crie um projeto em [console.firebase.google.com](https://console.firebase.google.com/)
+2. **Authentication** → ative o provedor **Google** → em *Settings → Authorized domains* adicione o domínio do site
+3. **Firestore Database** → crie o banco → em *Rules* use:
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /users/{uid} {
+         allow read, write: if request.auth != null && request.auth.uid == uid;
+       }
+     }
+   }
+   ```
+4. **Project settings → Your apps → Web** → copie o `firebaseConfig` para `data/firebase-config.js`
 
 ## Níveis
 
@@ -57,12 +77,16 @@ E abrir `http://localhost:8000`.
 ```
 index.html        # shell da aplicação
 styles.css        # estilos (tema claro/escuro)
-app.js            # roteamento, renderização, estado e quiz
-data/             # conteúdo: um arquivo por fase
-  00-base.js … 14-carreira.js
+app.js            # roteamento, renderização, estado, merge e quiz
+sync.js           # login Google + Firestore (carregado só se configurado)
+data/
+  00-base.js … 14-carreira.js   # conteúdo: um arquivo por fase
+  respostas/                    # respostas de referência (mesma ordem das perguntas)
+  kw.js                         # termos de busca em inglês por tópico
+  firebase-config.js            # config pública do Firebase (ou null)
 ```
 
-Para editar ou adicionar conteúdo, altere os arquivos em `data/`. Cada fase é um objeto com `topics`, e cada tópico tem `learn`, `practice`, `resources` e `questions`.
+Para editar ou adicionar conteúdo, altere os arquivos em `data/`. Cada fase é um objeto com `topics`, e cada tópico tem `learn`, `practice`, `resources` e `questions`. As respostas ficam em `data/respostas/`, na mesma ordem das perguntas.
 
 > ⚠️ O progresso das perguntas é indexado pela posição. Ao reordenar perguntas de um tópico, as avaliações já feitas podem mudar de pergunta. Para não perder nada, adicione perguntas novas no final da lista.
 
