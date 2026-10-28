@@ -1,95 +1,107 @@
-# Data Engineering Roadmap: do zero ao Especialista
+# Data Engineering Roadmap: from zero to Staff
 
-**🔗 Acesse:** https://thiscesarr.github.io/data-engineering-roadmap/
+**English** · [Português](README.pt-BR.md)
 
-Roadmap interativo e completo de **Engenharia de Dados**, do nível zero ao **Especialista / Staff**, com uma trilha paralela de **carreira internacional** (vagas no exterior, entrevistas em inglês, vistos e negociação).
+**🔗 Live site:** https://thiscesarr.github.io/data-engineering-roadmap/
 
-Montei este roadmap para guiar meus próprios estudos e medir meu progresso. A meta é trabalhar como Senior/Staff Data Engineer no exterior.
+An interactive, free and open-source study roadmap for **Data Engineering**, from absolute zero to **Expert / Staff** level, plus a parallel track for building an **international career** (job search, interviews in English, work visas and negotiation).
 
-> 🇺🇸 **English summary:** An interactive, self-hosted study roadmap that takes a data engineer from zero to Staff level: 15 phases, 88 topics, ~580 validation questions, hands-on exercises, a capstone project per phase, spaced-repetition review, and local progress tracking. Built with plain HTML/CSS/JS, with no build step and no dependencies, and deployed on GitHub Pages.
+I built it to guide my own studies and track whether I actually learned each topic, not just watched content about it. If you are on the same path, use it, fork it and help improve it.
 
-## O que tem aqui
+> **Language note:** the content is written natively in **Brazilian Portuguese**. The site has a one-click **EN** toggle that uses machine translation. A native English version of the content is a welcome contribution.
+
+## What's inside
 
 | | |
 |---|---|
-| **15 fases** | Base → Computação → Python → SQL → Modelagem → Big Data/Spark → Pipelines → Streaming → Cloud → DataOps → Governança → Arquitetura → ML/IA → Staff+ → Carreira internacional |
-| **88 tópicos** | Cada um com *por que importa*, *o que estudar*, *mão na massa* e *fontes* (docs oficiais, livros, cursos) |
-| **579 perguntas de validação** | Perguntas de nível de entrevista, **cada uma com resposta de referência oculta** para conferir depois de responder |
-| **15 projetos de portfólio** | Um projeto por fase, com entregáveis claros |
-| **~900 conceitos e ~240 práticas** | Checklists marcáveis |
+| **15 phases** | Foundations → Computing → Python → SQL → Data modeling → Big Data/Spark → Pipelines → Streaming → Cloud → DataOps → Governance → Architecture → ML/AI data → Staff+ → International career |
+| **88 topics** | Each with *why it matters*, *what to study*, *hands-on practice*, *how to study* (study steps + ready-made searches) and *sources* (official docs, books, courses) |
+| **579 validation questions** | Interview-level questions, **each with a hidden reference answer** you reveal only after answering |
+| **15 portfolio projects** | One capstone per phase, with clear deliverables |
+| **~900 concepts and ~240 exercises** | Checkable lists |
 
-## Funcionalidades
+## Features
 
-- **Tracking de progresso** por conceito, prática, pergunta, tópico, fase e nível de senioridade
-- **Responda → confira → avalie**: escreva sua resposta, revele a **resposta de referência** e se autoavalie (*Não sei / Parcial / Domino*)
-- **Revisão ativa (quiz)** com repetição espaçada: prioriza pontos fracos e o que não é revisado há mais tempo (atalhos `R` revela, `1` `2` `3` avaliam)
-- **Como estudar** em cada tópico: roteiro de estudo + buscas prontas (documentação, livros, aulas, cursos, artigos, GitHub, perguntas de entrevista)
-- **Sincronização celular ↔ computador** com login Google (Firebase, gratuito)
-- **Tradução para inglês** com um clique (PT/EN)
-- **Histórico de acesso**, heatmap de atividade e sequência de dias estudando
-- **Projeção de conclusão** com base nas horas semanais de estudo
-- **Busca** em tópicos, conceitos e perguntas (atalho `/`)
-- **Backup/restauração** do progresso em JSON (para sincronizar entre computador e celular)
-- Tema claro/escuro e layout responsivo
+- **Answer → check → rate:** write your answer, reveal the reference answer, then rate yourself (*Don't know / Partial / Mastered*)
+- **Active review (quiz)** with spaced repetition: weak and least-recently-seen questions come back more often (`R` reveals, `1` `2` `3` rate)
+- **Progress tracking** by concept, exercise, question, topic, phase and seniority level
+- **Activity heatmap**, study streak, access history and projected completion date based on weekly study hours
+- **Sync between phone and computer** with Google sign-in (optional)
+- **Search** across topics, concepts and questions (`/`)
+- **JSON backup and restore**, light/dark theme, responsive layout for phones
 
-O progresso fica salvo no `localStorage` do navegador. Com o login Google ativo, também vai para um documento privado no Firestore (só o próprio usuário lê e escreve), e cada aparelho mescla as mudanças: em cada item vale a alteração mais recente.
+## Levels
 
-### Ativando a sincronização (uma vez)
-
-1. Crie um projeto em [console.firebase.google.com](https://console.firebase.google.com/)
-2. **Authentication** → ative o provedor **Google** → em *Settings → Authorized domains* adicione o domínio do site
-3. **Firestore Database** → crie o banco → em *Rules* use:
-   ```
-   rules_version = '2';
-   service cloud.firestore {
-     match /databases/{database}/documents {
-       match /users/{uid} {
-         allow read, write: if request.auth != null && request.auth.uid == uid;
-       }
-     }
-   }
-   ```
-4. **Project settings → Your apps → Web** → copie o `firebaseConfig` para `data/firebase-config.js`
-
-## Níveis
-
-| Nível | Fases | Foco |
+| Level | Phases | Focus |
 |---|---|---|
-| Base | 0 | Método de estudo, papel do DE, inglês, matemática |
-| Júnior | 1–3 | Computação, Linux, redes, Git, algoritmos, Python, SQL |
-| Pleno | 4–8 | Modelagem, Spark, lakehouse, Airflow/dbt, Kafka/Flink, Cloud |
-| Sênior | 9–12 | DataOps, Kubernetes, Terraform, governança, system design, dados para IA |
-| Especialista / Staff | 13 | Internals de bancos e engines, open source, liderança técnica |
-| Carreira (paralela) | 14 | Mercado global, vistos, currículo, entrevistas, negociação |
+| Foundations | 0 | How to learn, the DE role, English, math and statistics |
+| Junior | 1–3 | Computing, Linux, networking, Git, algorithms, Python, SQL |
+| Mid-level | 4–8 | Data modeling, Spark, lakehouse, Airflow/dbt, Kafka/Flink, cloud |
+| Senior | 9–12 | DataOps, Kubernetes, Terraform, governance, system design, data for AI |
+| Expert / Staff | 13 | Database and query engine internals, open source, technical leadership |
+| Career (parallel) | 14 | Global market, visas, résumé, interviews, negotiation, relocation |
 
-## Rodando localmente
+## Privacy
 
-Não há build. Basta servir a pasta:
+Without signing in, all progress stays in your browser's `localStorage`. Nothing leaves your device.
+
+If you sign in with Google to sync devices, your progress (checked items, ratings, written answers and history) is stored in a Firestore document that **only your account can read or write**. You can delete it at any time from the *Progress & sync* page. If you prefer not to rely on this project's Firebase, fork the repo and use your own (see below).
+
+## Disclaimer
+
+The content was written with the help of AI and reviewed by me, but it can still contain mistakes or outdated details. Visa rules and salary ranges change often: always confirm with official sources and current data (e.g. levels.fyi). Corrections are very welcome.
+
+## Run locally
+
+No build step and no dependencies. Serve the folder:
 
 ```bash
 python -m http.server 8000
 ```
 
-E abrir `http://localhost:8000`.
+Then open `http://localhost:8000`.
 
-## Estrutura
+## Self-host with your own sync (optional)
+
+1. Fork the repo and enable **GitHub Pages** (Settings → Pages → branch `main`, folder `/`).
+2. Create a project at [console.firebase.google.com](https://console.firebase.google.com/).
+3. **Authentication** → enable the **Google** provider. Under *Settings → Authorized domains*, add your Pages domain.
+4. **Firestore Database** → create the database and set these **Rules**:
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /users/{uid} {
+         allow read, delete: if request.auth != null && request.auth.uid == uid;
+         allow create, update: if request.auth != null && request.auth.uid == uid
+           && request.resource.data.data is string
+           && request.resource.data.data.size() < 800000;
+       }
+     }
+   }
+   ```
+5. **Project settings → Your apps → Web**: copy the `firebaseConfig` values into `data/firebase-config.js`. Set it to `null` to disable sync.
+
+The Firebase web config is not a secret. Data is protected by the rules above. On the free (Spark) plan there is no billing; if the daily quota runs out, sync pauses until the next day and local progress keeps working.
+
+## Project structure
 
 ```
-index.html        # shell da aplicação
-styles.css        # estilos (tema claro/escuro)
-app.js            # roteamento, renderização, estado, merge e quiz
-sync.js           # login Google + Firestore (carregado só se configurado)
+index.html        # app shell
+styles.css        # styles (light/dark)
+app.js            # routing, rendering, state, merge and quiz
+sync.js           # Google sign-in + Firestore (loaded only when configured)
 data/
-  00-base.js … 14-carreira.js   # conteúdo: um arquivo por fase
-  respostas/                    # respostas de referência (mesma ordem das perguntas)
-  kw.js                         # termos de busca em inglês por tópico
-  firebase-config.js            # config pública do Firebase (ou null)
+  00-base.js … 14-carreira.js   # content, one file per phase
+  respostas/                    # reference answers (same order as the questions)
+  kw.js                         # English search terms per topic
+  firebase-config.js            # public Firebase config (or null)
 ```
 
-Para editar ou adicionar conteúdo, altere os arquivos em `data/`. Cada fase é um objeto com `topics`, e cada tópico tem `learn`, `practice`, `resources` e `questions`. As respostas ficam em `data/respostas/`, na mesma ordem das perguntas.
+## Contributing
 
-> ⚠️ O progresso das perguntas é indexado pela posição. Ao reordenar perguntas de um tópico, as avaliações já feitas podem mudar de pergunta. Para não perder nada, adicione perguntas novas no final da lista.
+Found a wrong answer, a broken link or a missing topic? Open an issue or a pull request. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Licença
+## License
 
 MIT

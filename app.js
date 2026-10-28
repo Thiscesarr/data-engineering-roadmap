@@ -171,12 +171,13 @@
     CLOUD.state = 'on'; CLOUD.lastSync = now(); updateSyncUI();
     if (!remote || stable(merged) !== stable(mergeState(remote, null))) schedulePush(0);
   }
-  function schedulePush(delay = 2500) {
+  function schedulePush(delay = 6000) {
     if (!CLOUD.user || !CLOUD.api) return;
     clearTimeout(CLOUD.pushTimer);
     CLOUD.pushTimer = setTimeout(doPush, delay);
   }
   async function doPush() {
+    CLOUD.pushTimer = null;
     if (!CLOUD.user) return;
     CLOUD.state = 'busy'; updateSyncUI();
     try {
@@ -205,6 +206,9 @@
     }
   }
   window.addEventListener('focus', () => { if (CLOUD.user) schedulePush(300); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden' && CLOUD.user && CLOUD.pushTimer) { clearTimeout(CLOUD.pushTimer); CLOUD.pushTimer = null; doPush(); }
+  });
 
   /* =========================================================
    * Idioma (tradução automática via Google Translate)
@@ -784,7 +788,10 @@
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{uid} {
-      allow read, write: if request.auth != null &amp;&amp; request.auth.uid == uid;
+      allow read, delete: if request.auth != null &amp;&amp; request.auth.uid == uid;
+      allow create, update: if request.auth != null &amp;&amp; request.auth.uid == uid
+        &amp;&amp; request.resource.data.data is string
+        &amp;&amp; request.resource.data.data.size() &lt; 800000;
     }
   }
 }</pre>`;
@@ -803,7 +810,8 @@ service cloud.firestore {
         return `<div class="eyebrow">sincronização</div>
           <h3 style="margin:8px 0 6px">Use o mesmo progresso no celular e no computador</h3>
           <p class="muted" style="margin-top:0">Entre com a mesma conta Google nos dois aparelhos. Checklists, avaliações, respostas escritas, histórico e sequência ficam sincronizados automaticamente, sem perder o que já está neste navegador.</p>
-          <button class="btn primary" data-act="login">${googleG()}Entrar com Google</button>`;
+          <button class="btn primary" data-act="login">${googleG()}Entrar com Google</button>
+          <p class="faint small" style="margin:12px 0 0">Privacidade: ao entrar, seu progresso (itens marcados, avaliações, respostas escritas e histórico) fica num banco Firebase deste projeto, que só a sua conta Google consegue ler ou alterar. Nada é usado para outro fim. Você pode apagar tudo da nuvem a qualquer momento.</p>`;
       default: {
         const u = CLOUD.user || {};
         return `<div class="eyebrow">sincronização · ${CLOUD.state === 'busy' ? 'sincronizando…' : 'ativa'}</div>
@@ -813,6 +821,10 @@ service cloud.firestore {
               <div class="faint small">${CLOUD.lastSync ? 'Última sincronização: ' + fmtDateTime(CLOUD.lastSync) : ''}</div></div>
             <button class="btn sm" data-act="sync-now">${icon('repeat')}Sincronizar agora</button>
             <button class="btn sm" data-act="logout">${icon('logout')}Sair</button>
+          </div>
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line);display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <span class="faint small" style="flex:1;min-width:220px">Seu progresso na nuvem só é acessível pela sua conta. Apagar remove a cópia da nuvem; a deste navegador continua.</span>
+            <button class="btn sm danger" data-act="cloud-delete">Apagar meus dados da nuvem</button>
           </div>`;
       }
     }
@@ -1018,6 +1030,16 @@ service cloud.firestore {
     }
     if (act === 'logout') { if (CLOUD.api) CLOUD.api.signOut(); toast('Você saiu. O progresso continua salvo neste navegador.'); return; }
     if (act === 'sync-now') { doPush(); return; }
+    if (act === 'cloud-delete') {
+      if (!CLOUD.user || !CLOUD.api) return;
+      if (!confirm('Apagar permanentemente o seu progresso salvo na nuvem? O progresso deste navegador continua. Outros aparelhos deixam de receber atualizações.')) return;
+      const uid = CLOUD.user.uid;
+      clearTimeout(CLOUD.pushTimer); CLOUD.pushTimer = null;
+      if (CLOUD.unsub) { CLOUD.unsub(); CLOUD.unsub = null; }
+      CLOUD.api.remove(uid).then(() => CLOUD.api.signOut()).then(() => toast('Dados da nuvem apagados'))
+        .catch(err => toast('Não foi possível apagar: ' + (err.code || err.message)));
+      return;
+    }
     if (act === 'export') {
       flushLocal();
       const blob = new Blob([JSON.stringify({ app: 'deroadmap', version: 2, exportedAt: new Date().toISOString(), state: S }, null, 2)], { type: 'application/json' });

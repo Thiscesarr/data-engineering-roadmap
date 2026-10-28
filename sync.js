@@ -11,7 +11,7 @@ export async function createSync(config) {
   ]);
   const { initializeApp } = appMod;
   const { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } = authMod;
-  const { getFirestore, doc, onSnapshot, runTransaction, serverTimestamp } = fsMod;
+  const { getFirestore, doc, onSnapshot, runTransaction, serverTimestamp, deleteDoc } = fsMod;
 
   const app = initializeApp(config);
   const auth = getAuth(app);
@@ -57,6 +57,8 @@ export async function createSync(config) {
         tx.set(ref(uid), { data: JSON.stringify(merged), updatedAt: serverTimestamp(), v: 1 });
         return merged;
       });
-    }
+    },
+    // Apaga o documento do usuário na nuvem (direito de exclusão)
+    remove(uid) { return deleteDoc(ref(uid)); }
   };
 }
