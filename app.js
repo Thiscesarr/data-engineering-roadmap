@@ -8,8 +8,8 @@
   const ANSWERS = window.ROADMAP_ANSWERS || {};
   const KW = window.ROADMAP_KW || {};
   const TOPICS = [];
-  const TOPIC = {};
-  const PHASE = {};
+  const TOPIC = Object.create(null);
+  const PHASE = Object.create(null);
   PHASES.forEach(p => {
     PHASE[p.id] = p;
     p.topics.forEach(t => {
@@ -73,11 +73,38 @@
    * ======================================================= */
   const KEY = 'deroadmap:v1';
   const blank = () => ({ t: {}, q: {}, v: {}, h: [], log: {}, pj: {}, weekly: 12, wu: 0, started: Date.now(), resetAt: 0 });
+  // Valida e normaliza um estado de origem não confiável (backup importado, nuvem, localStorage)
+  function sanitize(s) {
+    const r = blank();
+    if (!s || typeof s !== 'object') return r;
+    const num = (v, d = 0) => (v !== null && v !== '' && Number.isFinite(+v) ? +v : d);
+    const okKey = k => k !== '__proto__' && k !== 'constructor' && k !== 'prototype';
+    const obj = o => (o && typeof o === 'object' && !Array.isArray(o) ? o : {});
+    const flags = o => { const out = {}; Object.keys(obj(o)).forEach(k => { if (/^\d+$/.test(k) && o[k] === true) out[k] = true; }); return out; };
+    Object.entries(obj(s.t)).forEach(([id, v]) => { if (okKey(id) && v && typeof v === 'object') r.t[id] = { l: flags(v.l), p: flags(v.p), u: num(v.u) }; });
+    Object.entries(obj(s.q)).forEach(([k, v]) => {
+      if (!okKey(k) || !v || typeof v !== 'object') return;
+      const q = { u: num(v.u), r: null, ts: null };
+      if (v.r === 0 || v.r === 1 || v.r === 2) { q.r = v.r; q.ts = num(v.ts); }
+      if (typeof v.a === 'string') q.a = v.a.slice(0, 20000);
+      r.q[k] = q;
+    });
+    Object.entries(obj(s.pj)).forEach(([k, v]) => { if (okKey(k) && v && typeof v === 'object') r.pj[k] = Object.assign(flags(v), { u: num(v.u) }); });
+    Object.entries(obj(s.v)).forEach(([k, v]) => { if (okKey(k)) r.v[k] = num(v); });
+    Object.entries(obj(s.log)).forEach(([k, v]) => { if (/^\d{4}-\d{2}-\d{2}$/.test(k)) r.log[k] = Math.max(0, Math.min(100000, num(v))); });
+    r.h = Array.isArray(s.h) ? s.h.filter(x => x && typeof x.id === 'string' && okKey(x.id)).map(x => ({ id: x.id, ts: num(x.ts) })).slice(0, 300) : [];
+    r.weekly = Math.min(80, Math.max(1, num(s.weekly, 12)));
+    r.wu = num(s.wu);
+    r.started = num(s.started, Date.now());
+    r.resetAt = num(s.resetAt);
+    return r;
+  }
+
   let S = load();
   function load() {
     try {
       const s = JSON.parse(localStorage.getItem(KEY));
-      if (s && typeof s === 'object') return Object.assign(blank(), s);
+      if (s && typeof s === 'object') return sanitize(s);
     } catch (e) { /* storage indisponível */ }
     return blank();
   }
@@ -111,8 +138,8 @@
 
   // Merge de dois estados: por item, vence o mais recente (u). Respeita "zerar progresso" (resetAt).
   function mergeState(a, b) {
-    a = Object.assign(blank(), a || {});
-    b = Object.assign(blank(), b || {});
+    a = sanitize(a);
+    b = sanitize(b);
     const r = blank();
     r.resetAt = Math.max(a.resetAt || 0, b.resetAt || 0);
     r.started = Math.min(a.started || Infinity, b.started || Infinity);
