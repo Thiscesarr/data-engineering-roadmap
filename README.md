@@ -4,6 +4,8 @@
 
 **🔗 Live site:** https://thiscesarr.github.io/data-engineering-roadmap/
 
+[![Data Engineering Roadmap: desktop and mobile](assets/cover.png)](https://thiscesarr.github.io/data-engineering-roadmap/)
+
 An interactive, free and open-source study roadmap for **Data Engineering**, from absolute zero to **Expert / Staff** level, plus a parallel track for building an **international career** (job search, interviews in English, work visas and negotiation).
 
 I built it to guide my own studies and track whether I actually learned each topic, not just watched content about it. If you are on the same path, use it, fork it and help improve it.
@@ -21,6 +23,10 @@ I built it to guide my own studies and track whether I actually learned each top
 | **~900 concepts and ~240 exercises** | Checkable lists |
 
 ## Features
+
+![Write your answer, reveal the reference answer and rate yourself](assets/demo.gif)
+
+<sub>Screens show demo progress data.</sub>
 
 - **Answer → check → rate:** write your answer, reveal the reference answer, then rate yourself (*Don't know / Partial / Mastered*)
 - **Active review (quiz)** with spaced repetition: weak and least-recently-seen questions come back more often (`R` reveals, `1` `2` `3` rate)

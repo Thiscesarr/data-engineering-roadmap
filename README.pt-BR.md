@@ -4,6 +4,8 @@
 
 **🔗 Acesse:** https://thiscesarr.github.io/data-engineering-roadmap/
 
+[![Data Engineering Roadmap: desktop e celular](assets/cover.png)](https://thiscesarr.github.io/data-engineering-roadmap/)
+
 Roadmap de estudos interativo, gratuito e open source de **Engenharia de Dados**, do zero ao nível **Especialista / Staff**, com uma trilha paralela para construir uma **carreira internacional** (vagas no exterior, entrevistas em inglês, vistos e negociação).
 
 Criei este roadmap para guiar meus próprios estudos e medir se eu aprendi de verdade cada tópico, e não só assisti conteúdo sobre ele. Se você está no mesmo caminho, use, faça um fork e ajude a melhorar.
@@ -19,6 +21,10 @@ Criei este roadmap para guiar meus próprios estudos e medir se eu aprendi de ve
 | **~900 conceitos e ~240 práticas** | Checklists marcáveis |
 
 ## Funcionalidades
+
+![Escreva sua resposta, revele a resposta de referência e se autoavalie](assets/demo.gif)
+
+<sub>As telas mostram dados de progresso de demonstração.</sub>
 
 - **Responda → confira → avalie**: escreva sua resposta, revele a resposta de referência e se autoavalie (*Não sei / Parcial / Domino*)
 - **Revisão ativa (quiz)** com repetição espaçada: perguntas fracas e as que você não vê há mais tempo voltam com mais frequência (`R` revela, `1` `2` `3` avaliam)
